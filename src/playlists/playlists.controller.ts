@@ -27,7 +27,7 @@ export class PlaylistsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.playlistsService.findOne(+id);
+    return this.playlistsService.findOne(id);
   }
 
   @Patch(':id')
@@ -35,11 +35,11 @@ export class PlaylistsController {
     @Param('id') id: string,
     @Body() updatePlaylistDto: UpdatePlaylistDto,
   ) {
-    return this.playlistsService.update(+id, updatePlaylistDto);
+    return this.playlistsService.update(id, updatePlaylistDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.playlistsService.remove(+id);
+    return this.playlistsService.remove(id);
   }
 }
