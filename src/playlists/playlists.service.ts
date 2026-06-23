@@ -40,8 +40,6 @@ export class PlaylistsService {
     return data;
   }
 
-  // Теперь возвращает плейлист вместе со всеми его треками (join),
-  // отсортированными по позиции — фронту не нужно делать второй запрос.
   async findOne(id: string) {
     const { data, error } = await this.supabaseService
       .getClient()
@@ -143,8 +141,6 @@ export class PlaylistsService {
   async reorderTracks(playlistId: string, reorderTracksDto: ReorderTracksDto) {
     await this.assertOwnership(playlistId);
 
-    // Supabase JS не поддерживает batch-update в одном запросе,
-    // поэтому обновляем строки параллельно.
     const updates = reorderTracksDto.tracks.map(({ id, position }) =>
       this.supabaseService
         .getClient()
@@ -164,8 +160,6 @@ export class PlaylistsService {
     return this.findOne(playlistId);
   }
 
-  // Общая проверка владения плейлистом — переиспользуется во всех write-методах,
-  // включая работу с playlist_tracks (нельзя менять чужие треки).
   private async assertOwnership(playlistId: string) {
     const { data, error } = await this.supabaseService
       .getClient()
