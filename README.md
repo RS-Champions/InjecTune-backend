@@ -18,81 +18,124 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# InjecTune Backend
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+NestJS REST API for [InjecTune](https://github.com/RS-Champions/InjecTune) — a music streaming app powered by the Jamendo API.
 
-## Project setup
+## Tech Stack
 
-```bash
-$ npm install
-```
+- **NestJS** (TypeScript)
+- **Supabase** (PostgreSQL)
+- **Swagger** — API documentation at `/api`
 
-## Compile and run the project
+## Features
 
-```bash
-# development
-$ npm run start
+- Playlist CRUD (create, read, update, delete)
+- Playlist track management (add, remove, reorder)
+- Favorites (Liked Songs) — add, remove, list
 
-# watch mode
-$ npm run start:dev
+## Prerequisites
 
-# production mode
-$ npm run start:prod
-```
+- Node.js v22+
+- A [Supabase](https://supabase.com) project with the schema from [`supabase-schema.sql`](./supabase-schema.sql)
 
-## Run tests
+## Getting Started
+
+### 1. Clone the repository
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone https://github.com/RS-Champions/InjecTune-backend.git
+cd InjecTune-backend
 ```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+
+Create a `.env` file in the project root (see `.env.example`):
+
+```env
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+PORT=3000
+```
+
+> ⚠️ Never commit `.env` to version control. The `SUPABASE_SERVICE_ROLE_KEY` has full database access and must be kept secret.
+
+### 4. Run in development mode
+
+```bash
+npm run start:dev
+```
+
+The server starts at `http://localhost:3000`.
+Swagger UI is available at `http://localhost:3000/api`.
+
+## API Overview
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/playlists` | Get all playlists for current user |
+| `POST` | `/playlists` | Create a playlist |
+| `GET` | `/playlists/:id` | Get playlist with tracks |
+| `PATCH` | `/playlists/:id` | Update playlist name/description |
+| `DELETE` | `/playlists/:id` | Delete a playlist |
+| `POST` | `/playlists/:id/tracks` | Add a track to a playlist |
+| `DELETE` | `/playlists/:id/tracks/:trackId` | Remove a track from a playlist |
+| `PATCH` | `/playlists/:id/reorder` | Reorder playlist tracks |
+| `GET` | `/favorites` | Get all liked tracks |
+| `POST` | `/favorites/:trackId` | Like a track |
+| `DELETE` | `/favorites/:trackId` | Unlike a track |
+
+Full interactive documentation: `/api` (Swagger UI).
+
+## Database Schema
+
+The Supabase schema is defined in [`supabase-schema.sql`](./supabase-schema.sql).
+
+Tables:
+- `users` — application users (stub during development, replaced by real auth later)
+- `playlists` — user playlists
+- `playlist_tracks` — tracks within playlists; `source` field supports `'jamendo'` and `'own'` (for future upload feature)
+- `favorites` — liked tracks
+- `recently_played` — listening history (endpoint coming in next milestone)
+
+## Development Notes
+
+### Authentication
+
+Auth is currently stubbed: all requests use a hardcoded `STUB_USER_ID`.
+Real JWT-based authentication will replace this once the auth module is implemented.
+
+> See `TODO(auth)` comments throughout the codebase.
+
+### Track Sources
+
+`playlist_tracks.source` supports two values:
+- `'jamendo'` — tracks from the [Jamendo API](https://developer.jamendo.com/v3.0)
+- `'own'` — user-uploaded tracks (planned feature, not yet implemented)
 
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+The API is deployed on [Render](https://render.com).
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+| Setting | Value |
+|---------|-------|
+| Build Command | `npm install && npm run build` |
+| Start Command | `npm run start:prod` |
+| Environment | Set `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `PORT` in Render dashboard |
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+## Related
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- [InjecTune Frontend](https://github.com/RS-Champions/InjecTune) — Angular 21 app
+- [Jamendo API](https://developer.jamendo.com/v3.0) — music source
+- [Supabase](https://supabase.com) — database and storage
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Author - [AlenaVP](https://github.com/AlenaVP)
