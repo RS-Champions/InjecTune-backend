@@ -32,8 +32,7 @@ export class FavoritesService {
     if (!trackId) {
       throw new BadRequestException('trackId is required');
     }
-    // Supabase вернёт ошибку на уровне unique constraint, если трек уже лайкнут.
-    // Перехватываем её и возвращаем 409 Conflict, а не 500.
+    // returns 409 Conflict (but not 500)
     const { data, error } = await this.supabaseService
       .getClient()
       .from('favorites')
@@ -54,8 +53,6 @@ export class FavoritesService {
   }
 
   async remove(trackId: string) {
-    // Сначала проверяем, что запись существует — иначе DELETE пройдёт тихо (0 rows affected),
-    // и фронт не узнает, что трека в избранном не было.
     const { data: existing } = await this.supabaseService
       .getClient()
       .from('favorites')

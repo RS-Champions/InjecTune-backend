@@ -29,7 +29,7 @@ export class FavoritesController {
   }
 
   @Delete(':trackId')
-  @HttpCode(HttpStatus.NO_CONTENT) // 204 — стандарт для DELETE без тела ответа
+  @HttpCode(HttpStatus.NO_CONTENT) // 204 — for DELETE without response body
   @ApiOperation({ summary: 'Remove a track from favorites (unlike)' })
   @ApiParam({ name: 'trackId', description: 'Jamendo track ID' })
   remove(@Param('trackId') trackId: string) {
