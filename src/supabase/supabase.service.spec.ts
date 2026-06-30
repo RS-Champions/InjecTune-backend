@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { createClient } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
 
-// Mock the entire @supabase/supabase-js module so no real HTTP client is created
 jest.mock('@supabase/supabase-js', () => ({
   createClient: jest.fn(),
 }));
@@ -14,8 +13,6 @@ describe('SupabaseService', () => {
   const VALID_URL = 'https://test.supabase.co';
   const VALID_KEY = 'service-role-key-xxx';
 
-  // Helper: builds the NestJS testing module with controlled env values.
-  // Returns the compiled module (or rejects if construction throws).
   function buildModule(url: string | undefined, key: string | undefined) {
     return Test.createTestingModule({
       providers: [
@@ -35,12 +32,9 @@ describe('SupabaseService', () => {
   }
 
   beforeEach(() => {
-    // Reset call history between tests, but keep the mock implementation
     mockCreateClient.mockClear();
-    mockCreateClient.mockReturnValue({ from: jest.fn() }); // default fake client
+    mockCreateClient.mockReturnValue({ from: jest.fn() });
   });
-
-  // --- Happy path ---
 
   it('should be defined when both env vars are present', async () => {
     const module = await buildModule(VALID_URL, VALID_KEY);
@@ -72,10 +66,8 @@ describe('SupabaseService', () => {
     const second = service.getClient();
 
     expect(first).toBe(second);
-    expect(mockCreateClient).toHaveBeenCalledTimes(1); // still only once
+    expect(mockCreateClient).toHaveBeenCalledTimes(1);
   });
-
-  // --- Guard: missing env vars ---
 
   it('should throw during module init when SUPABASE_URL is missing', async () => {
     await expect(buildModule(undefined, VALID_KEY)).rejects.toThrow(

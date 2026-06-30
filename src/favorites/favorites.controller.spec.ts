@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FavoritesController } from './favorites.controller';
 import { FavoritesService } from './favorites.service';
 
-// Standalone typed mock functions — avoids unbound-method lint errors
 const mockFindAll = jest.fn<ReturnType<FavoritesService['findAll']>, []>();
 const mockAdd = jest.fn<ReturnType<FavoritesService['add']>, [string]>();
 const mockRemove = jest.fn<ReturnType<FavoritesService['remove']>, [string]>();

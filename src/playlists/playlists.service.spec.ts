@@ -3,9 +3,6 @@ import { NotFoundException } from '@nestjs/common';
 import { PlaylistsService } from './playlists.service';
 import { SupabaseService } from '../supabase/supabase.service';
 
-// Создаёт цепочный (chainable) мок Supabase query builder.
-// Каждый метод возвращает сам себя (mockReturnThis), кроме финального,
-// который возвращает { data, error } — как реальный Supabase-запрос после await.
 function createSupabaseQueryMock(result: {
   data: unknown;
   error: { message: string } | null;
@@ -21,9 +18,6 @@ function createSupabaseQueryMock(result: {
     maybeSingle: jest.fn().mockResolvedValue(result),
   };
 
-  // .delete().eq() в реальном Supabase резолвится сам по себе (без .single()),
-  // поэтому eq должен уметь либо продолжать цепочку, либо быть "thenable" в конце.
-  // Проще всего — последний .eq() в delete-сценарии тоже возвращает промис данных.
   query.eq.mockImplementation(() => ({
     ...query,
     then: (resolve: (value: typeof result) => void) => resolve(result),
@@ -114,8 +108,6 @@ describe('PlaylistsService', () => {
 
   describe('remove', () => {
     it('deletes the playlist after confirming ownership', async () => {
-      // Первый вызов .from('playlists') — это assertOwnership (maybeSingle),
-      // второй — собственно delete. Настраиваем mockFrom вызываться дважды с разным поведением.
       const ownershipCheck = createSupabaseQueryMock({
         data: { id: 'p1' },
         error: null,
