@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { SupabaseModule } from './supabase/supabase.module';
 import { PlaylistsModule } from './playlists/playlists.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { RecentlyPlayedModule } from './recently-played/recently-played.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { FavoritesModule } from './favorites/favorites.module';
     SupabaseModule,
     PlaylistsModule,
     FavoritesModule,
+    RecentlyPlayedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
